@@ -8,7 +8,7 @@
 
 
 		<!-- Favicon and touch icons -->
-		<link rel="shortcut icon" href="assets/ico/favicon.ico" type="image/x-icon" />
+		<link rel="shortcut icon" th:href="@{/ico/favicon.ico}" type="image/x-icon" />
 
 	    <!-- Css files -->
 	    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -53,40 +53,57 @@
 				<div class="col-lg-12">
                     <div class="panel panel-default">
 						<div class="panel-heading">
-							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>Hover table</strong></h2>
+							<h2><i class="fa fa-table red"></i><span class="break"></span><strong>编辑员工</strong></h2>
 						</div>
-						<a th:href="@{/emp}" class="btn  btn-primary">添加员工</a>
 
-                        <div class="panel-body">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>id</th>
-                                        <th>lastName</th>
-                                        <th>email</th>
-                                        <th>gender</th>
-										<th>department</th>
-										<th>birth</th>
-										<th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="emp:${emps}">
-                                        <td th:text="${emp.getId()}"></td>
-                                        <td th:text="${emp.getLastName()}"></td>
-                                        <td th:text="${emp.getEmail()}"></td>
-                                        <td th:text="${emp.getGender()==0?'女':'男'}"></td>
-										<td th:text="${emp.getDepartment().getDepartmentName()}"></td>
-										<td th:text="${#dates.format(emp.getBirth(),'yyyy-MM-dd HH:mm:ss')}"></td>
-										<td>
-											<a th:href="@{/toUpdateEmp/} + ${emp.getId()}" class="btn btn-sm btn-primary">编辑</a>
-											<a th:href="@{/deleteEmp/} + ${emp.getId()}" class="btn btn-sm btn-danger">删除</a>
-										</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+						<div class="panel-body">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h2><i class="fa fa-indent red"></i><strong>Normal Form</strong></h2>
+								</div>
+								<div class="panel-body">
+									<form th:action="@{/updateEmp}" method="post">
+										<input type="hidden" name="id" th:value="${emp.getId()}">
+										<div class="form-group">
+											<label for="lastName">lastName</label>
+											<input type="text" id="lastName" name="lastName" class="form-control" placeholder="Email address" th:value="${emp.getLastName()}">
+										</div>
+										<div class="form-group">
+											<label for="email">Email</label>
+											<input type="email" id="email" name="email" class="form-control" placeholder="Email address" th:value="${emp.getEmail()}">
+										</div>
+										<div class="form-group">
+											<label class="radio-inline" for="gender1">
+												<input th:checked="${emp.getGender()==1}" type="radio" id="gender1" name="gender" value="1"> 男
+											</label>
+											<label class="radio-inline" for="gender2">
+												<input th:checked="${emp.getGender()==0}" type="radio" id="gender2" name="gender" value="0"> 女
+											</label>
+										</div>
+										<div class="form-group">
+											<label for="department">department</label>
+											<select id="department" name="department.id" class="form-control" size="1">
+												<option th:selected="${dep.getId() == emp.getDepartment().getId()}" th:each="dep:${dep}" th:text="${dep.getDepartmentName()}"
+												th:value="${dep.getId()}"></option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="lastName">birth</label>
+											<input type="text" id="birth" name="birth" class="form-control" placeholder="Email address" th:value="${#dates.format(emp.getBirth(),'yyyy-MM-dd HH:mm:ss')}">
+										</div>
+
+										<div class="panel-footer">
+											<button type="submit" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i> Submit</button>
+											<button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+										</div>
+
+									</form>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
 				</div><!--/col-->
 
 			</div><!--/row-->

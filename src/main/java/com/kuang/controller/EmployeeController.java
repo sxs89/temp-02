@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collection;
@@ -29,12 +31,45 @@ public class EmployeeController {
         return "emp/employeeList";
     }
 
-    @GetMapping("/toEmp")
+    @GetMapping("/emp")
     public String toAddEmployee(Model model){
         //查询所有的部门信息
         Collection<Department> departments = departmentDao.getDepartments();
         model.addAttribute("demp",departments);
         return "/emp/employeeAdd";
+    }
+
+    @PostMapping("/emp")
+    public String addEmployee(Employee employee,Model model){
+        //添加的操作
+        employeeDao.save(employee);
+        return "redirect:/emps";
+    }
+
+
+    //去员工的修改页面
+    @GetMapping("/toUpdateEmp/{id}")
+    public String toUpdateEmp(@PathVariable("id") Integer id, Model model){
+        //查出原来的数据
+        Employee emp = employeeDao.getEmployeeById(id);
+        Collection<Department> departments = departmentDao.getDepartments();
+        model.addAttribute("emp",emp);
+        model.addAttribute("dep",departments);
+        return "/emp/employeeEdit";
+    }
+
+    //员工信息修改
+    @PostMapping("/updateEmp")
+    public String updateEmp(Employee employee){
+        employeeDao.save(employee);
+        return "redirect:/emps";
+    }
+
+    //删除员工
+    @GetMapping("/deleteEmp/{id}")
+    public String deleteId(@PathVariable("id") Integer id){
+        employeeDao.delete(id);
+        return "redirect:/emps";
     }
 
 }
